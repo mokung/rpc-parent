@@ -42,5 +42,4 @@ public class ConsumerProxyFactory<T> implements FactoryBean<T> {
         return true;
     }
 
-
 }

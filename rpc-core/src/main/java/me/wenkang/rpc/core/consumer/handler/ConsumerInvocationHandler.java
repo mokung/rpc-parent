@@ -50,7 +50,6 @@ public class ConsumerInvocationHandler implements InvocationHandler {
         request.setIface(method.getDeclaringClass().getName());
         request.setMethodName(method.getName());
         request.setParameters(args);
-        request.setParameterTypes(method.getParameterTypes());
         request.setRequestId(UUID.randomUUID().toString());
 
         return request;

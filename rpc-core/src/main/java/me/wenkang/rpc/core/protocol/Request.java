@@ -1,7 +1,6 @@
 package me.wenkang.rpc.core.protocol;
-import lombok.Data;
 
-import java.time.LocalDateTime;
+import lombok.Data;
 
 /**
  * @author wenkang
@@ -14,6 +13,5 @@ public class Request{
     private String requestId;
     private String iface;
     private String methodName;
-    private Class<?>[] parameterTypes;
     private Object[] parameters;
 }

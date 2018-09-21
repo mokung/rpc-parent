@@ -1,15 +1,14 @@
 package me.wenkang.rpc.core.provider;
 
 import lombok.extern.slf4j.Slf4j;
-import me.wenkang.rpc.core.bean.ServerConf;
 import me.wenkang.rpc.core.bean.InterfaceServiceInfo;
+import me.wenkang.rpc.core.bean.ServerConf;
+import me.wenkang.rpc.core.provider.context.ProviderCache;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author wenkang
@@ -27,7 +26,6 @@ public class ServerStartApplicationListener implements ApplicationListener<Conte
         ServiceInitializer serviceInitializer = applicationContext.getBean(ServiceInitializer.class);
 
         List<String> interfaces = serverConf.getInterfaces();
-        Map<String, InterfaceServiceInfo> handlerMap = new HashMap<>();
         for (String service : interfaces) {
             Class serviceBean = null;
             try {
@@ -36,10 +34,10 @@ public class ServerStartApplicationListener implements ApplicationListener<Conte
                 log.error("ClassNotFoundException",e);
                 continue;
             }
-            handlerMap.put(service, new InterfaceServiceInfo(serviceBean));
+            ProviderCache.get().put(service, new InterfaceServiceInfo(serviceBean));
         }
             try {
-                Server.startServer(serviceInitializer, handlerMap, serverConf.getPort());
+                Server.startServer(serviceInitializer, serverConf.getPort());
             } catch (Exception e) {
                 log.error("fail to start server", e);
                 System.exit(-1);

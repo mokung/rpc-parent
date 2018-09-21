@@ -29,7 +29,10 @@ class Server {
     private static boolean init = false;
 
 
-    static void startServer(ServiceInitializer serviceInitializer, Map<String, InterfaceServiceInfo> handlerMap, int port) throws Exception {
+    private Server(){
+
+    }
+    static void startServer(ServiceInitializer serviceInitializer, int port) throws Exception {
 
         if (init) {
             return;
@@ -41,7 +44,7 @@ class Server {
             @Override
             public void initChannel(SocketChannel channel) throws Exception {
                 channel.pipeline().addLast(new Deserializer(Request.class)).addLast(new Serializer())
-                        .addLast(new ProviderHandler(handlerMap, serviceInitializer));
+                        .addLast(new ProviderHandler(serviceInitializer));
             }
         };
 
@@ -51,10 +54,9 @@ class Server {
         String host = getLocalHost();
 
         bootstrap.bind(host, port).sync();
-        //  future.channel().closeFuture().sync();
         init = true;
 
-        log.info("rpc start");
+        log.info("rpc server start");
 
     }
 

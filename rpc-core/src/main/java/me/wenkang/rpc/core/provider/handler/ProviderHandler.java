@@ -8,8 +8,7 @@ import me.wenkang.rpc.core.bean.InterfaceServiceInfo;
 import me.wenkang.rpc.core.protocol.Request;
 import me.wenkang.rpc.core.protocol.Response;
 import me.wenkang.rpc.core.provider.ServiceInitializer;
-
-import java.util.Map;
+import me.wenkang.rpc.core.provider.context.ProviderCache;
 
 /**
  * @author wenkang
@@ -19,14 +18,11 @@ import java.util.Map;
 @Slf4j
 public class ProviderHandler extends SimpleChannelInboundHandler<Request> {
 
-    private final Map<String, InterfaceServiceInfo> handlerMap;
 
     private ServiceInitializer serviceInitializer;
 
 
-
-    public ProviderHandler(Map<String, InterfaceServiceInfo> handlerMap, ServiceInitializer serviceInitializer) {
-        this.handlerMap = handlerMap;
+    public ProviderHandler(ServiceInitializer serviceInitializer) {
         this.serviceInitializer = serviceInitializer;
     }
 
@@ -48,9 +44,9 @@ public class ProviderHandler extends SimpleChannelInboundHandler<Request> {
     }
 
     private Object call(Request request) throws Exception {
-        InterfaceServiceInfo serviceBean = handlerMap.get(request.getIface());
+        InterfaceServiceInfo serviceBean =  ProviderCache.get().getService(request.getIface());
 
-        if (serviceBean == null){
+        if (serviceBean == null ){
             throw new Exception("interface undeclared");
         }
 
